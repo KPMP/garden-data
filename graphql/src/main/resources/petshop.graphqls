@@ -1,7 +1,10 @@
+# You need to define at least one query
+# this says that if you ask for pets, you will get a list of Pet objects
 type Query {
     pets: [Pet]
 }
 
+# This is the definition of what a Pet object looks like
 type Pet {
     id: Int
     type: Animal
@@ -9,6 +12,7 @@ type Pet {
     age: Int
 }
 
+# This is the definition of the type from above
 enum Animal {
     DOG
     CAT

@@ -14,6 +14,8 @@ import graphql.enums.Animal;
 public class Query implements GraphQLQueryResolver {
 
 	public List<Pet> pets() {
+
+		// this is where you would do a query against the db
 		List<Pet> pets = new ArrayList<>();
 
 		Pet aPet = new Pet();
