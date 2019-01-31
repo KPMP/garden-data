@@ -7,7 +7,8 @@ Tutorial: https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authen
 
 # Trying It Out (Copied from Tutorial)
 
-`# issues a GET request to retrieve tasks with no JWT
+```
+# issues a GET request to retrieve tasks with no JWT
 # HTTP 403 Forbidden status is expected
 curl http://localhost:8080/tasks
 
@@ -33,4 +34,5 @@ curl -H "Content-Type: application/json" \
 
 # issue a new GET request, passing the JWT
 # remember to replace xxx.yyy.zzz with the JWT retrieved above
-curl -H "Authorization: Bearer xxx.yyy.zzz" http://localhost:8080/tasks`
+curl -H "Authorization: Bearer xxx.yyy.zzz" http://localhost:8080/tasks
+````
