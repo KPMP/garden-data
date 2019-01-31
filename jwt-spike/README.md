@@ -1,5 +1,6 @@
 # Spring REST API with JWT
-Cloned from:  https://github.com/vladimirfomene/springboot-auth-updated.git
+Cloned from:  https://github.com/vladimirfomene/springboot-auth-updated.git 
+
 Tutorial: https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
 
 # Running 
