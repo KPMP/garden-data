@@ -1,0 +1,50 @@
+version: "3"
+services:
+  
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.7.11-management
+    ports:
+      - "8080:15672"
+      - "5672:5672"
+      - "5671:5671"
+    environment:
+      RABBITMQ_DEFAULT_PASS: pass
+      RABBITMQ_DEFAULT_USER: user
+    networks:
+      local:
+        aliases:
+          - rabbitmq
+
+  sender:
+    container_name: sender
+    image: kingstonduo/kpmp-spring
+    ports:
+      - "3030:3030"
+    volumes:
+      - "/Users/rlreamy/git/kpmp/garden-data/rabbitMQ/sender:/home/gradle"
+    networks:
+      local:
+        aliases:
+          - sender
+
+  receiver:
+    container_name: receiver
+    image: kingstonduo/kpmp-spring
+    ports:
+      - "4040:4040"
+    volumes:
+      - "/Users/rlreamy/git/kpmp/garden-data/rabbitMQ/receiver:/home/gradle"
+    networks:
+      local:
+        aliases:
+          - receiver
+
+networks:
+  local:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - 
+          subnet: 10.3.0.0/16
