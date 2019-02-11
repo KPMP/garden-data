@@ -14,7 +14,8 @@ public class DemoApplication {
 	}
 
 	@Autowired
-	public DemoApplication(Receiver receiver) throws Exception {
-		receiver.receive(QUEUE_NAME);
+	public DemoApplication(Receiver receiver, ReceiveLogsTopic receiveLogs) throws Exception {
+//		receiver.receive(QUEUE_NAME);
+		receiveLogs.receive("*.critical");
 	}
 }

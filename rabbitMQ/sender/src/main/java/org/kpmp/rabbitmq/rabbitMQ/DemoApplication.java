@@ -14,7 +14,9 @@ public class DemoApplication {
 	}
 
 	@Autowired
-	public DemoApplication(Sender sender) throws Exception {
+	public DemoApplication(Sender sender, EmitLogTopic logEmitter) throws Exception {
 		sender.send(QUEUE_NAME);
+		logEmitter.emit("log.critical", "Terrible thing happened");
+		logEmitter.emit("log.info", "Info message that will not be picked up");
 	}
 }
