@@ -8,9 +8,8 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ENV AIRFLOW_HOME=/app/airflow
 ENV SLUGIFY_USES_TEXT_UNIDECODE=yes
 RUN pip install --upgrade pip
+RUN pip install pymongo
 RUN pip install apache-airflow                       
-
-COPY /dags $AIRFLOW_HOME/dags
 
 RUN airflow initdb
 EXPOSE 8080
