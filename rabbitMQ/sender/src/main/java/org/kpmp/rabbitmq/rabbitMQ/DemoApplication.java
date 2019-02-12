@@ -1,5 +1,7 @@
 package org.kpmp.rabbitmq.rabbitMQ;
 
+import org.kpmp.rabbitmq.rabbitMQ.publishSubscribe.EmitLog;
+import org.kpmp.rabbitmq.rabbitMQ.routing.EmitLogDirect;
 import org.kpmp.rabbitmq.rabbitMQ.topic.EmitLogTopic;
 import org.kpmp.rabbitmq.rabbitMQ.workQueue.TaskProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,15 @@ public class DemoApplication {
 	}
 
 	@Autowired
-	public DemoApplication(Sender sender, EmitLogTopic logEmitter, TaskProducer producer) throws Exception {
+	public DemoApplication(Sender sender, EmitLogTopic logEmitter, TaskProducer producer, EmitLog pubSubEmitLog,
+			EmitLogDirect routingEmitLog) throws Exception {
 		sender.send(QUEUE_NAME);
 		logEmitter.emit("log.critical", "Terrible thing happened");
 		logEmitter.emit("log.info", "Info message that will not be picked up");
 		producer.produce("Initial message...");
+		pubSubEmitLog.emitLog();
+		routingEmitLog.emitLog("info", "stuff happened");
+		routingEmitLog.emitLog("error", "bad stuff happened");
+		routingEmitLog.emitLog("warning", "message will be lost, no receiver");
 	}
 }

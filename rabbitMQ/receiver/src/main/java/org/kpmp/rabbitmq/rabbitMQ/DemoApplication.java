@@ -1,5 +1,7 @@
 package org.kpmp.rabbitmq.rabbitMQ;
 
+import org.kpmp.rabbitmq.rabbitMQ.publishSubscribe.ReceiveLogs;
+import org.kpmp.rabbitmq.rabbitMQ.routing.ReceiveLogsDirect;
 import org.kpmp.rabbitmq.rabbitMQ.topic.ReceiveLogsTopic;
 import org.kpmp.rabbitmq.rabbitMQ.workQueue.FailingWorker;
 import org.kpmp.rabbitmq.rabbitMQ.workQueue.Worker;
@@ -17,11 +19,14 @@ public class DemoApplication {
 	}
 
 	@Autowired
-	public DemoApplication(Receiver receiver, ReceiveLogsTopic receiveLogs, Worker worker, FailingWorker failingWorker)
-			throws Exception {
+	public DemoApplication(Receiver receiver, ReceiveLogsTopic receiveLogs, Worker worker, FailingWorker failingWorker,
+			ReceiveLogs pubSubReceieveLogs, ReceiveLogsDirect routingReceiveLogs) throws Exception {
 		receiver.receive(QUEUE_NAME);
 		receiveLogs.receive("*.critical");
 		worker.doWork();
 		failingWorker.doWork();
+		pubSubReceieveLogs.receive();
+		routingReceiveLogs.receive("info");
+		new ReceiveLogsDirect().receive("error");
 	}
 }
