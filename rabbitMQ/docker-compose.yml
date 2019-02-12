@@ -23,6 +23,8 @@ services:
       - "3030:3030"
     volumes:
       - "/Users/rlreamy/git/kpmp/garden-data/rabbitMQ/sender:/home/gradle"
+    depends_on: 
+      - receiver
     networks:
       local:
         aliases:
