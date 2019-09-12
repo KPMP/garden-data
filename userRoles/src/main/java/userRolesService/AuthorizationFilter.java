@@ -61,6 +61,9 @@ public class AuthorizationFilter implements Filter {
 						log.error("wrong user");
 						existingSession.invalidate();
 					}
+				} else {
+					log.info("no existing session...now looking up user");
+					// do the call
 				}
 			}
 
@@ -82,6 +85,7 @@ public class AuthorizationFilter implements Filter {
 					// different for realsies
 					session.setMaxInactiveInterval(5 * 60);
 					Cookie message = new Cookie("shibid", user.getShibId());
+					session.setAttribute("roles", user.getGroups());
 					response.addCookie(message);
 					chain.doFilter(incomingRequest, response);
 				} else {
