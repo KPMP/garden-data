@@ -1,7 +1,7 @@
 # REDCap API Test using Flask
 
 ## Running
-1. If you're on a PC you'll need to set the ENV_PYTHON_APPDIR in the .env to an absolute URI.
+1. If you're on a PC, you'll need to set the ENV_PYTHON_APPDIR in the .env to an absolute URI. Otherwise you can leave it alone. 
 2. Apply for a token here: https://redcap.kpmp.org/redcap_v9.1.1/API/project_api.php?pid=14
 3. Set the ENV_API_TOKEN in .env to your token once you are approved.
 2. 'docker-compose up -d'
