@@ -3,6 +3,5 @@ const syncRouter = require('./routes/sync');
 const app = express();
 
 app.use('/', syncRouter);
-app.listen(5050);
 
-module.exports = app;
+app.listen(5050);

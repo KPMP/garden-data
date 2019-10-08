@@ -3,11 +3,10 @@ const router = express.Router();
 const mongodb = require('../connectors/mongodb');
 const elasticsearch = require('../connectors/elasticsearch');
 
-const INDEX_ID = 'dataLake';
-const TYPE_PACKAGE = 'package';
-const TYPE_FILE = 'package_file';
+const TYPE_PACKAGE = 'packages';
+const TYPE_FILE = 'package_files';
 
-router.get('/list', (req, res, next) => {
+router.get('/list-datalake', (req, res, next) => {
     mongodb.connect()
         .then((client) => {
             client.db().collection('packages').find().toArray((err, docs) => {
@@ -18,76 +17,105 @@ router.get('/list', (req, res, next) => {
         });
 });
 
+router.get('/list-es-packages', (req, res, next) => {
+    elasticsearch.client.search({
+            index: TYPE_PACKAGE
+        }).then((data) => {
+            res.status(200).send(data);
+        }).catch((err) => {
+        res.status(500).send(err);
+    });
+});
+
+router.get('/list-es-files', (req, res, next) => {
+    elasticsearch.client.search({
+        index: TYPE_FILE
+    }).then((data) => {
+        res.status(200).send(data);
+    }).catch((err) => {
+        res.status(500).send(err);
+    });
+});
+
 router.get('/sync', (req, res, next) => {
     mongodb.connect()
         .then((client) => {
             client.db().collection('packages').find().toArray((err, docs) => {
-                let body = getBulkBodyFromDocs(docs);
+                let body = getElasticsearchBulkBodyFromMongoResponse(docs);
 
                 //https://medium.com/@info_957/taming-elasticsearch-to-load-large-custom-json-datasets-2a2a0e31c044
-                elasticsearch.client.bulk({body})
-                    .then((data) => {
-                        let errors = [];
+                elasticsearch.client.bulk({
+                    body: body
+                }).then((data) => {
+                    let errors = [];
 
-                        data.items.forEach((item) => {
-                            if(item.index && item.index.error) {
-                                errors.append(item.index.error);
-                                console.log('!!! Error indexing row ', item.index.error);
-                            }
-                        });
-
-                        if(!errors.length) {
-                            res.status(200);
+                    //Check bulk API response, item by item, for errors; respond accordingly
+                    data.body.items.forEach((item) => {
+                        if(item.index && item.index.error) {
+                            errors.push(item.index.error);
                         }
-
-                        else {
-                            res.status(400).send(errors);
-                        }
-                    }).catch((err) => {
-                        res.status(500).send(err);
                     });
+
+                    if(!errors.length) {
+                        res.status(200).send(data);
+                    }
+
+                    else {
+                        res.status(400).send(errors);
+                    }
+                }).catch((err) => {
+                    res.status(500).send(err);
+                });
             });
         }).catch((err) => {
         res.status(500).send(err);
     });
 });
 
-function getBulkBodyFromDocs(docs) {
+function getElasticsearchBulkBodyFromMongoResponse(docs) {
     let body = [];
-    let first = true;
 
     for(let i = 0; i < docs.length; i++) {
         let doc = docs[i];
+        let packageId = doc._id;
         let files = doc.files;
-        let flattenedDoc = Object.assign(doc, doc.submitter);
-        delete flattenedDoc.files;
-        delete flattenedDoc.submitter;
+        let flatPackage = Object.assign(doc, doc.submitter);
+        delete flatPackage.files;
+        delete flatPackage.submitter;
+        delete flatPackage._id;
 
         body.push({
-            _index: INDEX_ID,
-            _type: TYPE_PACKAGE,
-            _id: flattenedDoc._id
+            update: {
+                _index: TYPE_PACKAGE,
+                _type: TYPE_PACKAGE,
+                _id: packageId
+            }
         });
 
-        body.push(flattenedDoc);
+        body.push({
+            doc: flatPackage,
+            doc_as_upsert: true
+        });
 
         for(let j = 0; j < files.length; j++) {
             let file = files[j];
+            let fileId = file._id;
+            file.packageId = packageId;
+            delete file._id;
 
             body.push({
-                _index: INDEX_ID,
-                _type: TYPE_FILE,
-                _id: file._id
+                update: {
+                    _index: TYPE_FILE,
+                    _type: TYPE_FILE,
+                    _id: fileId
+                }
             });
 
-            file.packageId = doc._id;
 
-            body.push(file);
-        }
-
-        if(first) {
-            console.log('... first processed doc: ', body);
-            first = false;
+            body.push({
+                doc: file,
+                doc_as_upsert: true
+            });
         }
     }
 
