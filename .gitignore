@@ -1,2 +1,4 @@
 */build
 graphql/.gradle
+.idea
+node_modules
