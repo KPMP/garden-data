@@ -6,4 +6,7 @@
 3. Browse to "http://localhost:5000/"
 
 ## API Help
-https://redcap.kpmp.org/api/help/
+
+* API documentation: https://redcap.kpmp.org/api/help/
+* API playground: https://redcap.kpmp.org/
+  * Hint: create your queries here, select the Python tab, and copy/paste the data object into the Python code. 
