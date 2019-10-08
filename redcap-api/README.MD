@@ -1,4 +1,4 @@
-#REDCap API Test using Flask
+# REDCap API Test using Flask
 
 ## Running
 1. If you're on a PC you'll need to set the ENV_PYTHON_APPDIR in the .env to an absolute URI. 
