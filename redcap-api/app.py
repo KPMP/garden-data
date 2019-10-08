@@ -1,5 +1,6 @@
 import time
 import pycurl
+import os
 from io import BytesIO
 import urllib
 
@@ -7,8 +8,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-TOKEN = '1B8263FE00A21A63CC66D4A4533C47E2'
-
+TOKEN = os.environ['API_TOKEN']
 
 def getInfo(): 
     data = {
