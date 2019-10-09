@@ -3,4 +3,4 @@ graphql/.gradle
 .idea
 node_modules
 __pycache__/
-
+.env

@@ -13,6 +13,7 @@ router.get('/list-datalake', (req, res, next) => {
                 res.status(200).send(docs);
             });
         }).catch((err) => {
+            console.error('!!! Error connecting to mongodb: ', err);
             res.status(500).send(err);
         });
 });
@@ -23,6 +24,7 @@ router.get('/list-es-packages', (req, res, next) => {
         }).then((data) => {
             res.status(200).send(data);
         }).catch((err) => {
+        console.error('!!! Error connecting to elasticsearch: ', err);
         res.status(500).send(err);
     });
 });
@@ -33,6 +35,7 @@ router.get('/list-es-files', (req, res, next) => {
     }).then((data) => {
         res.status(200).send(data);
     }).catch((err) => {
+        console.error('!!! Error connecting to elasticsearch: ', err);
         res.status(500).send(err);
     });
 });
@@ -64,10 +67,12 @@ router.get('/sync', (req, res, next) => {
                         res.status(400).send(errors);
                     }
                 }).catch((err) => {
+                    console.error('!!! Error connecting to elasticsearch: ', err);
                     res.status(500).send(err);
                 });
             });
         }).catch((err) => {
+        console.error('!!! Error connecting to mongodb: ', err);
         res.status(500).send(err);
     });
 });
