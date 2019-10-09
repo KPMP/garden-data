@@ -130,9 +130,15 @@ app.layout = html.Div(
                     ]
                 ),
                 html.Div(
-                    className="trhee columns",
+                    className="three columns",
                     children = [
                         dcc.Graph(id="graph-3d-plot-tsne", style={"height": "98vh"})
+                    ]
+                ),
+                html.Div(
+                    className="three columns",
+                    children = [
+                        dcc.Graph(id='graph-violin')
                     ]
                 ),
                 html.Div(
@@ -151,7 +157,6 @@ app.layout = html.Div(
                                     },
                                 ),
                                 html.Div(id="div-plot-click-image"),
-                                html.Div(id="div-plot-click-wordemb"),
                             ],
                         )
                     ],
@@ -182,6 +187,59 @@ def generate_figure_image(groups, layout):
     figure = go.Figure(data=data, layout=layout)
 
     return figure
+
+
+
+@app.callback(
+    Output("graph-violin", "figure"),
+    [
+        Input("dropdown-dataset", "value"),
+        Input("slider-iterations", "value"),
+        Input("slider-perplexity", "value"),
+        Input("slider-pca-dimension", "value"),
+        Input("slider-learning-rate", "value"),
+    ],
+)
+def display_violin_plot(
+    dataset,
+    iterations,
+    perplexity,
+    pca_dim,
+    learning_rate):
+    if dataset:
+        path = f"data/iterations_{iterations}/perplexity_{perplexity}/pca_{pca_dim}/learning_rate_{learning_rate}"
+
+
+        try:
+                data_url = [
+                    "data",
+                    "iterations_" + str(iterations),
+                    "perplexity_" + str(perplexity),
+                    "pca_" + str(pca_dim),
+                    "learning_rate_" + str(learning_rate),
+                    "data.csv",
+                ]
+       
+                full_path = PATH.joinpath(*data_url)
+                embedding_df = pandas.read_csv(
+                    full_path, index_col=0, encoding="ISO-8859-1"
+                )
+        #
+        except FileNotFoundError as error:
+            print(
+                error,
+                "\n The dataset was not found.  Please generate it using generate_demo_embeddings.py"
+            )
+            return go.Figure()
+
+        if dataset in IMAGE_DATASETS:
+            figure= go.Figure(data=go.Violin(y=embedding_df["x"]))
+
+        else:
+            figure = go.Figure()
+
+        return figure
+
 
 
 @app.callback(
@@ -238,10 +296,10 @@ def display_3d_scatter_plot(
             embedding_df["label"] = embedding_df.index
             groups = embedding_df.groupby("label")
             figure = generate_figure_image(groups, layout)
-        
+
         else:
             figure = go.Figure()
-            
+
         return figure
 
 
