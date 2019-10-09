@@ -1,0 +1,15 @@
+version: "3.5"
+services:
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - "${ENV_PYTHON_APPDIR:-.}:/code"
+    environment:
+      FLASK_ENV: development
+      API_TOKEN: "${ENV_API_TOKEN}"
+  
+networks:
+  local:
