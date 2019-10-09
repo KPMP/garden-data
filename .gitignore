@@ -1,2 +1,3 @@
 */build
 graphql/.gradle
+__pycache__/
