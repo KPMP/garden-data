@@ -9,7 +9,12 @@ const TYPE_FILE = 'package_files';
 router.get('/list-datalake', (req, res, next) => {
     mongodb.connect()
         .then((client) => {
-            client.db().collection('packages').find().toArray((err, docs) => {
+            client.db().collection('packages').find().toArray(async (err, docs) => {
+
+                for(let i = 0; i < docs.length; i++) {
+                    docs[i].submitter = await getSubmitterById(client, docs[i]);
+                }
+
                 res.status(200).send(docs);
             });
         }).catch((err) => {
@@ -43,8 +48,8 @@ router.get('/list-es-files', (req, res, next) => {
 router.get('/sync', (req, res, next) => {
     mongodb.connect()
         .then((client) => {
-            client.db().collection('packages').find().toArray((err, docs) => {
-                let body = getElasticsearchBulkBodyFromMongoResponse(docs);
+            client.db().collection('packages').find().toArray(async (err, docs) => {
+                let body = await getElasticsearchBulkBodyFromMongoResponse(client, docs);
 
                 //https://medium.com/@info_957/taming-elasticsearch-to-load-large-custom-json-datasets-2a2a0e31c044
                 elasticsearch.client.bulk({
@@ -77,14 +82,31 @@ router.get('/sync', (req, res, next) => {
     });
 });
 
-function getElasticsearchBulkBodyFromMongoResponse(docs) {
+function getSubmitterById(client, doc) {
+    return new Promise((res, rej) => {
+        client.db().collection('users').find({_id: doc.submitter.oid}).toArray((err, docs) => {
+            if(err) {
+                rej(err);
+            }
+
+            else {
+                res(docs[0]);
+            }
+        });
+    });
+}
+
+async function getElasticsearchBulkBodyFromMongoResponse(client, docs) {
     let body = [];
 
     for(let i = 0; i < docs.length; i++) {
         let doc = docs[i];
         let packageId = doc._id;
         let files = doc.files;
-        let flatPackage = Object.assign(doc, doc.submitter);
+        let flatPackage = Object.assign(doc, {});
+        let submitter = await getSubmitterById(client, doc);
+        flatPackage.submitterName = submitter.displayName;
+        flatPackage.submitterEmail = submitter.email;
         delete flatPackage.files;
         delete flatPackage.submitter;
         delete flatPackage._id;
@@ -115,7 +137,6 @@ function getElasticsearchBulkBodyFromMongoResponse(docs) {
                     _id: fileId
                 }
             });
-
 
             body.push({
                 doc: file,
