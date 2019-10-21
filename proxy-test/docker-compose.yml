@@ -1,0 +1,33 @@
+version: "3.5"
+
+services:
+  proxy:
+    container_name: proxy
+    build: ./proxy
+    ports:
+      - "80:80"
+    networks:
+      local:
+        aliases:
+          - proxy
+
+  secret:
+    container_name: secret
+    build: ./secret
+    ports:
+      - "81:80"
+    expose:
+      - "80"
+    networks:
+      local:
+        aliases:
+          - secret 
+
+networks:
+  local:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - 
+          subnet: 10.4.0.0/16
