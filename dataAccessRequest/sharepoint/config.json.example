@@ -1,0 +1,9 @@
+{
+    "share_point":
+        {
+            "user": "",
+            "password": "",
+            "url": "https://uwnetid.sharepoint.com",
+            "site": "https://uwnetid.sharepoint.com/sites/kpmp_data_sharing/"
+        }
+}
