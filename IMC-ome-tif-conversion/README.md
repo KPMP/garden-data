@@ -14,8 +14,6 @@ So to convert the image in a way that is functional for vitessce, the directory 
   * Sample2-image-to-convert.tiff
   * Sample2-image-convert_summary.txt
 
-The `directory` variable should be adjusted for each folder you want to run this script on. 
-
 ## Usage
 Install the packages in the requirements.txt file
 `pip3 install -r requirements.txt`
@@ -25,4 +23,4 @@ Currently this takes in two files.
 2. tif file from IMC
  There is a directory variable that should be modified to point at the direcotry where the .txt and .tif files are located
 
-Hit the run all button and away you go!
+`python3 tiff-to-ome-tiff.py -d /path/to/directory`
