@@ -17,6 +17,9 @@ So to convert the image in a way that is functional for vitessce, the directory 
 The `directory` variable should be adjusted for each folder you want to run this script on. 
 
 ## Usage
+Install the packages in the requirements.txt file
+`pip3 install -r requirements.txt`
+
 Currently this takes in two files.
 1. txt file with the channel names and the like
 2. tif file from IMC
