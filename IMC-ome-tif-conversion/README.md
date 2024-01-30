@@ -1,7 +1,20 @@
 # tiff-to-ome-tiff conversion for IMC images
 
 ## How does this work
-This uses a _summary.txt file provided to us from IMC to convert their tiff image to a .ome.tif image that vitessce can understand
+This uses a _summary.txt file provided to us from IMC to convert their tiff image to a .ome.tif image that vitessce can understand.
+Currently this script cannot determine which text file goes with each .ome.tif image. This will require another look in the future, but for now this is what we have
+So to convert the image in a way that is functional for vitessce, the directory tree should look like this:
+
+### /folder/with/images
+* Sample1
+  * Sample1-image-to-convert.tiff
+  * Sample1-image-to-convert_summary.txt
+
+* Sample2
+  * Sample2-image-to-convert.tiff
+  * Sample2-image-convert_summary.txt
+
+The `directory` variable should be adjusted for each folder you want to run this script on. 
 
 ## Usage
 Currently this takes in two files.
