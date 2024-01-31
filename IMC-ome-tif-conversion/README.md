@@ -21,6 +21,7 @@ Install the packages in the requirements.txt file
 Currently this takes in two files.
 1. txt file with the channel names and the like
 2. tif file from IMC
- There is a directory variable that should be modified to point at the direcotry where the .txt and .tif files are located
 
-`python3 tiff-to-ome-tiff.py -d /path/to/directory`
+To run this script, copy the path of your directory and pass it to the script as a parameter
+
+`python3 tiff-to-ome-tiff.py -d /path/to/Sample1`
