@@ -5,6 +5,10 @@ This uses a _summary.txt file provided to us from IMC to convert their tiff imag
 Currently this script cannot determine which text file goes with each .ome.tif image. This will require another look in the future, but for now this is what we have
 So to convert the image in a way that is functional for vitessce, the directory tree should look like this:
 
+### Text file for ome.tif conversion.
+The text file involved in this process contains four columns separated by tab. the text file should contain these column names for use with vitessce and this conversion.
+`Page Channel MinValue MaxValue`
+
 ### /folder/with/images
 * Sample1
   * Sample1-image-to-convert.tiff
