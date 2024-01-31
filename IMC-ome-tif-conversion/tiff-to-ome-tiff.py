@@ -44,5 +44,5 @@ if os.path.isdir(args.dir):
     tiff_writer.close()
     
 else:
-  print('Direcotry is not valid')
+  print('Directory is not valid')
   sys.exit()
