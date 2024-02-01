@@ -2,11 +2,19 @@ from tifffile import TiffWriter, imread
 import pandas as pd
 import os
 import sys
+import argparse
 from os.path import join
 
-directory = "/home/zwright/Documents/KPMP/CODEX_2024/data"
-if os.path.isdir(directory):
-
+parser = argparse.ArgumentParser()
+parser.add_argument(
+  "-d",
+  "--dir",
+  required=True,
+  help="The directory where the .tiff and .txt file you want to convert are located"
+)
+args = parser.parse_args()
+if os.path.isdir(args.dir):
+  directory = args.dir
   channel_names = None
   img_path = None
   for filename in os.scandir(directory):
